@@ -1,0 +1,121 @@
+<%- include ('partials/header') %>
+
+<!-- Start Product Area -->
+<div class="container">
+	<div class="row">
+		<div class="col-12">
+			<div class="product-info">
+				<div class="tab-content" id="myTabContent">
+					<% if (user && user.isAdmin) { %>
+					<a style="color: white;" href="/rooms/add-room" class="btn animate">Add new room</a>
+					<% } %>
+					<!-- Start Single Tab -->
+					<div class="tab-pane fade show active" id="man" role="tabpanel">
+						<div class="tab-single">
+							<div class="row">
+								<% if (rooms.length > 0) { %>
+								<% for ( var i = 0; i < rooms.length; i++ ) { %>
+								<div class="col-xl-3 col-lg-4 col-md-4 col-12">
+									<div class="single-product">
+										<div class="product-img">
+											<a href="/rooms/<%= rooms[i]._id %>">
+												<img style="height: 250px; width: 300px;" class="default-img" src="<%= rooms[i].image %>" alt="#">
+												<img style="height: 250px; width: 300px;" class="hover-img" src="<%= rooms[i].image %>" alt="#">
+											</a>
+											<div class="button-head">
+												<div class="product-action">
+													<% if (user && user.isAdmin) { %>
+														<a title="Edit" href="/rooms/<%= rooms[i]._id %>/edit-rooms"><i class=" ti-pencil "></i><span>Edit</span></a>
+														<a title="Delete" href="/rooms/<%= rooms[i]._id %>/delete-room"><i class=" ti-trash "></i><span>Delete</span></a>
+													<% } %>
+												</div>
+												<div class="product-action-2">
+													<% if (rooms[i].available) { %>
+													<a title="Book" href="/rooms/<%= rooms[i]._id %>/add-to-checkout">Book</a>
+													<% } else { %>
+													<p>Product sold</p>
+													<% } %>
+												</div>
+											</div>
+										</div>
+										<div class="product-content">
+											<h3><a href="/rooms/<%= rooms[i]._id %>"><%= rooms[i].name %></a></h3>
+											<div class="product-price">
+												<span>$<%= rooms[i].price %></span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<% } %>
+								<% } else { %>
+									<h5>No rooms Found</h5>
+								<% } %>
+							</div>
+						</div>
+					</div>
+					<!--/ End Single Tab -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div style="float: right; margin-right: 20px; margin-top: 20px;" class="pagination">
+	<nav aria-label="Page navigation">
+		<ul class="pagination">
+			<li class="page-item <% if(!locals.pagination.previous) { %> disabled  <% } %> ">
+				<a class="page-link" href="<% if(locals.pagination.previous) { %>/rooms?page= <%= pagination.next %> <% } %>"">
+					Previous
+				</a>
+			</li>
+			<li class="page-item <% if(!locals.pagination.next) { %> disabled  <% } %>">
+				<a class="page-link" href="<% if(locals.pagination.next) { %>/rooms?page= <%= pagination.next %> <% } %>">
+					Next
+				</a>
+			</li>
+		</ul>
+		</nav>
+</div>
+<!-- End Product Area -->
+
+<!-- Start Shop Services Area -->
+<section style="margin-top: 80px;" class="shop-services section home">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-3 col-md-6 col-12">
+				<!-- Start Single Service -->
+				<div class="single-service">
+					<i class="ti-rss-alt"></i>
+					<h4>Complementary Wifi</h4>
+				</div>
+				<!-- End Single Service -->
+			</div>
+			<div class="col-lg-3 col-md-6 col-12">
+				<!-- Start Single Service -->
+				<div class="single-service">
+					<i class="ti-pie-chart"></i>
+					<h4>Complementary breakfast</h4>
+				</div>
+				<!-- End Single Service -->
+			</div>
+			<div class="col-lg-3 col-md-6 col-12">
+				<!-- Start Single Service -->
+				<div class="single-service">
+					<i class="ti-basketball"></i>
+					<h4>Swimming pool and Games</h4>
+				</div>
+				<!-- End Single Service -->
+			</div>
+			<div class="col-lg-3 col-md-6 col-12">
+				<!-- Start Single Service -->
+				<div class="single-service">
+					<i class="ti-car"></i>
+					<h4>Valet Services</h4>
+				</div>
+				<!-- End Single Service -->
+			</div>
+		</div>
+	</div>
+</section>
+<!-- End Shop Services Area -->
+
+<%- include ('partials/footer') %>
