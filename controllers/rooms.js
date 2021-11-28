@@ -1,72 +1,16 @@
 const mongoose = require("mongoose");
-const paginateResults = require("../helpers/pagination");
+
 const validateProduct = require("../validation/addproduct");
 const Rooms = require("../models/Rooms");
 const Checkout = require("../models/Checkout");
 const Booking = require("../models/Booking");
 
 const getAllRooms = (req, res) => {
-  var category = req.query.category;
-  var search = req.query.search;
-  var query = {};
-  query["$and"] = [];
-  query["$and"].push({
-    deleted: false,
-  });
-
-  if (category && category != "0") {
-    query["$and"].push({
-      category_id: parseInt(category),
-    });
-  }
-
-  if (search && search.trim() != "") {
-    query["$and"].push({
-      $or: [
-        {
-          name: new RegExp(search, "i"),
-        },
-        { description: RegExp(search, "i") },
-      ],
-    });
-  }
-
-  Rooms.find(query, function (err, rooms) {
-    if (err) throw err;
-    paginated = paginateResults(rooms, req.query.page || 1);
-    pagination = {};
-    if (paginated.next) {
-      pagination.next = paginated.next.page;
-    }
-    if (paginated.previous) {
-      pagination.previous = paginated.previous.page;
-    }
-    if (req.user) {
-      Checkout.findOne({ user: req.user._id }, function (err, checkout) {
-        if (checkout) {
-          res.render("index", {
-            rooms: paginated.results,
-            checkout: checkout.rooms,
-            pagination: pagination,
-            query: search,
-            category: category,
-          });
-        } else {
-          res.render("index", {
-            rooms: paginated.results,
-            pagination: pagination,
-            query: search,
-            category: category,
-          });
-        }
-      });
+  Rooms.find({}, function (err, results) {
+    if (err) {
+      throw err;
     } else {
-      res.render("index", {
-        rooms: paginated.results,
-        pagination: pagination,
-        query: search,
-        category: category,
-      });
+      res.json(results);
     }
   });
 };
@@ -88,7 +32,7 @@ const addNewRoom = (req, res) => {
   newRoom
     .save()
     .then(function (rooms) {
-      res.redirect("/rooms");
+      res.json({ message: "Success", status: "ok" });
     })
     .catch(function (err) {
       throw err;
@@ -166,7 +110,7 @@ const viewBoooking = (req, res) => {
 const editRoom = (req, res) => {
   const { errors, isValid } = validateProduct(req.body);
   if (!isValid) {
-    return res.render("addproduct", {
+    return res.json({
       errors: errors,
       name: req.body.name,
       description: req.body.description,
@@ -189,7 +133,7 @@ const editRoom = (req, res) => {
   Rooms.updateOne(query, newvalues, function (err, rooms) {
     if (err) throw err;
     req.flash("success_msg", "Room updated!");
-    res.redirect("/rooms");
+    res.json({ message: "Successful", status: "ok" });
   });
 };
 
@@ -198,8 +142,7 @@ const deleteRoom = (req, res) => {
     { _id: req.params.id },
     { $set: { deleted: true } },
     function (err, room) {
-      req.flash("success_msg", "Room deleted!");
-      res.redirect("/rooms");
+      res.json({ message: "Successful", status: "ok" });
     }
   );
 };
@@ -215,12 +158,11 @@ const addCheckout = (req, res, next) => {
       },
       { upsert: true },
       function (err, checkout) {
-        req.flash("success_msg", "Room added!");
-        res.redirect("/rooms");
+        req.json({ message: "Success", status: "ok" });
       }
     );
   } else {
-    res.redirect("/users/login");
+    res.redirect("/users/login"); //do this on front end
   }
 };
 
@@ -230,12 +172,11 @@ const removeCheckout = (req, res, next) => {
       { user: req.user._id },
       { $pull: { rooms: req.params.id } },
       function (err, checkout) {
-        req.flash("success_msg", "Room removed!");
-        res.redirect("/rooms/checkout");
+        req.json({ message: "Success", status: "ok" });
       }
     );
   } else {
-    res.redirect("/users/login");
+    res.redirect("/users/login"); //do this on front end
   }
 };
 

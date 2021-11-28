@@ -2,7 +2,7 @@ const express = require("express");
 const Router = express.Router();
 const multer = require("multer");
 //const mongoose = require("mongoose");
-const { ensureAuthenticated } = require("../helpers/auth");
+//const { ensureAuthenticated } = require("../helpers/auth");
 const roomsController = require("../controllers/rooms");
 
 const storage = multer.diskStorage({
@@ -36,7 +36,7 @@ Router.get("/", roomsController.getAllRooms);
 
 Router.post(
   "/",
-  ensureAuthenticated,
+
   upload.single("image"),
   roomsController.addNewRoom
 );
@@ -49,12 +49,12 @@ Router.post(
 
 Router.post(
   "/",
-  ensureAuthenticated,
+
   upload.single("image"),
   roomsController.editRoom
 );
 
-Router.get("/", ensureAuthenticated, roomsController.deleteRoom);
+Router.get("/", roomsController.deleteRoom);
 
 // Router.get("/", roomsController.addCheckout);
 

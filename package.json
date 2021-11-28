@@ -1,12 +1,12 @@
 {
-  "name": "hotel rentals",
+  "name": "Atlantic Hotel",
   "version": "1.0.0",
-  "description": "Hotel rental",
+  "description": "Website to book rooms and view rooms availability",
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js"
   },
-  "author": "Poorna Naidu, Siddhant Sahoo, Sankhadeep Dutta",
+  "author": "Dhruvi Shah, Manan Dalal, Lipi Patel",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
