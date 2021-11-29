@@ -1,8 +1,9 @@
 const express = require("express");
-const Router = express.Router();
 const bookingsController = require("../controllers/bookings");
-Router.get("/", bookingsController.findBooking);
 
-Router.post("/", bookingsController.newBooking);
+const Router = express.Router();
+
+Router.get("/", bookingsController.findBooking);    // To get bookings 
+Router.post("/", bookingsController.newBooking);    // To add a new booking
 
 module.exports = Router;

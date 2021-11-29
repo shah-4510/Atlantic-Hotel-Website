@@ -10,7 +10,8 @@ const getAllRooms = (req, res) => {
     if (err) {
       throw err;
     } else {
-      res.json(results);
+      const results1 = results.filter((result) => result.deleted === false)
+      res.json(results1);
     }
   });
 };
@@ -25,7 +26,7 @@ const addNewRoom = (req, res) => {
   const newRoom = new Rooms({
     name: req.body.name,
     description: req.body.description,
-    category_id: req.body.category,
+    category_id: req.body.category_id,
     price: req.body.price,
     image: req.file.path,
   });
@@ -116,7 +117,7 @@ const editRoom = (req, res) => {
       description: req.body.description,
       price: req.body.price,
       image: req.body.image,
-      category: req.body.category,
+      category: req.body.category_id,
     });
   }
 
@@ -125,7 +126,7 @@ const editRoom = (req, res) => {
     $set: {
       name: req.body.name,
       description: req.body.description,
-      category_id: req.body.category,
+      category_id: req.body.category_id,
       price: req.body.price,
       image: req.file.path,
     },

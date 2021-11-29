@@ -2,22 +2,17 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const flash = require('connect-flash');
 const session = require('express-session');
-const users = require('./routes/users');
-const rooms = require('./routes/rooms');
-const categories = require('./routes/categories');
-const bookings = require('./routes/bookings');
-const passport = require('passport');
 const mongoDB = require('./mongoDBClient');
 const path = require('path');
+
+const users = require('./routes/users');
+const rooms = require('./routes/rooms');
+const bookings = require('./routes/bookings');
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
-
-require('./config/passport')(passport);
-
 
 app.use(session({
   secret: 'secret',
@@ -25,12 +20,7 @@ app.use(session({
   saveUninitialized: true
 }));
 
-
-app.use(passport.initialize());
-app.use(passport.session());
-
 app.use(flash());
-
 
 app.use(function(req, res, next){
   res.locals.success_msg = req.flash('success_msg');
@@ -61,7 +51,6 @@ app.set('view engine', 'ejs');
 
 app.use('/rooms', rooms);
 app.use('/users', users);
-app.use('/categories', categories);
 app.use('/bookings', bookings);
 
 app.use('/uploads', express.static('uploads'));
@@ -82,7 +71,7 @@ app.use((error, req, res, next) => {
   });
 });
 
-app.listen(3000, function () {
-    console.log('App listening on port 3000!')
-  });
+app.listen(5000, function () {
+    console.log('App listening on port 5000!')
+});
 

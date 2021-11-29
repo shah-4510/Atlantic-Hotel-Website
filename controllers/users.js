@@ -6,32 +6,30 @@ const validateRegistration = require("../validation/register");
 const userLogin = (req, res) => {
   const { email, password } = req.body;
 
-  User.findOne({
-    email: email,
-  })
-    .then((user) => {
-      if (!user) {
-        return res.json({ status: "fail", message: "User not found" });
-      }
-
-      bcrypt.compare(password, user.password, (err, isMatch) => {
-        if (err) throw err;
-        if (isMatch) {
-          return res.json({
-            id: user._id,
-            username: user.name,
-            email: user.email,
-            isAdmin: user.isAdmin,
-            status: "ok",
-          });
-        } else {
-          return res.json({ status: "fail", message: "Incorrect Password" });
+  User.findOne({ email: email })
+      .then((user) => {
+        if (!user) {
+          return res.json({ status: "fail", message: "User not found" });
         }
+
+        bcrypt.compare(password, user.password, (err, isMatch) => {
+          if (err) throw err;
+          if (isMatch) {
+            return res.json({
+              id: user._id,
+              username: user.name,
+              email: user.email,
+              isAdmin: user.isAdmin,
+              status: "ok",
+            });
+          } else {
+            return res.json({ status: "fail", message: "Incorrect Password" });
+          }
+        });
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
 };
 
 const userRegister = (req, res) => {
