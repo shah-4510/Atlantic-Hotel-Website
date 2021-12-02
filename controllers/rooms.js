@@ -2,8 +2,6 @@ const mongoose = require("mongoose");
 
 const validateProduct = require("../validation/addproduct");
 const Rooms = require("../models/Rooms");
-const Checkout = require("../models/Checkout");
-const Booking = require("../models/Booking");
 
 const getAllRooms = (req, res) => {
   Rooms.find({}, function (err, results) {
@@ -31,81 +29,13 @@ const addNewRoom = (req, res) => {
     image: req.file.path,
   });
   newRoom
-    .save()
-    .then(function (rooms) {
-      res.json({ message: "Success", status: "ok" });
-    })
-    .catch(function (err) {
-      throw err;
-    });
-};
-
-const checkout = (req, res) => {
-  if (req.user) {
-    Checkout.findOne({ user: req.user._id })
-      .populate("rooms")
-      .exec(function (err, checkout) {
-        if (checkout) {
-          res.render("checkout", { checkout: checkout.rooms });
-        } else {
-          res.render("checkout");
-        }
-      });
-  } else {
-    res.redirect("/users/login");
-  }
-};
-
-const newBooking = (req, res) => {
-  if (req.user) {
-    Checkout.findOne({ user: req.user._id }, function (err, checkout) {
-      let newBooking = new Booking({
-        user: req.user._id,
-      });
-      checkout.rooms.forEach((element) => {
-        newBooking.rooms.push(mongoose.Types.ObjectId(element));
-      });
-
-      newBooking.save().then(function (err, order) {
-        Checkout.deleteOne({ user: req.user._id }, function (err, response) {
-          checkout.rooms.forEach((element) => {
-            Rooms.updateOne(
-              { _id: element },
-              { $set: { available: false } },
-              function (err, room) {
-                if (err) throw err;
-              }
-            );
-          });
-          req.flash("success_msg", "Booking successful!");
-          res.redirect("back");
-        });
-      });
-    });
-  } else {
-    res.redirect("/users/login");
-  }
-};
-
-const viewBoooking = (req, res) => {
-  if (req.user) {
-    Checkout.find({ user: req.user._id })
-      .populate("rooms")
-      .exec(function (err, bookings) {
-        Checkout.findOne({ user: req.user._id }, function (err, cart) {
-          if (checkout) {
-            res.render("bookings", {
-              bookings: bookings,
-              checkout: checkout.rooms,
-            });
-          } else {
-            res.render("bookings", { bookings: bookings });
-          }
-        });
-      });
-  } else {
-    res.redirect("/users/login");
-  }
+  .save()
+  .then(function (rooms) {
+    res.json({ message: "Success", status: "ok" });
+  })
+  .catch(function (err) {
+    throw err;
+  });
 };
 
 const editRoom = (req, res) => {
@@ -148,45 +78,8 @@ const deleteRoom = (req, res) => {
   );
 };
 
-const addCheckout = (req, res, next) => {
-  if (req.user) {
-    Checkout.updateOne(
-      { user: req.user._id },
-      {
-        $push: {
-          rooms: req.params.id,
-        },
-      },
-      { upsert: true },
-      function (err, checkout) {
-        req.json({ message: "Success", status: "ok" });
-      }
-    );
-  } else {
-    res.redirect("/users/login"); //do this on front end
-  }
-};
-
-const removeCheckout = (req, res, next) => {
-  if (req.user) {
-    Checkout.updateOne(
-      { user: req.user._id },
-      { $pull: { rooms: req.params.id } },
-      function (err, checkout) {
-        req.json({ message: "Success", status: "ok" });
-      }
-    );
-  } else {
-    res.redirect("/users/login"); //do this on front end
-  }
-};
-
 module.exports.getAllRooms = getAllRooms;
 module.exports.addNewRoom = addNewRoom;
-module.exports.checkout = checkout;
-module.exports.newBooking = newBooking;
-module.exports.viewBoooking = viewBoooking;
 module.exports.editRoom = editRoom;
 module.exports.deleteRoom = deleteRoom;
-module.exports.addCheckout = addCheckout;
-module.exports.removeCheckout = removeCheckout;
+

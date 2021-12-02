@@ -3,7 +3,7 @@ const bookingsController = require("../controllers/bookings");
 
 const Router = express.Router();
 
-Router.get("/", bookingsController.findBooking);    // To get bookings 
-Router.post("/", bookingsController.newBooking);    // To add a new booking
+Router.get("/:user", bookingsController.findBooking);    // To get all bookings of that particular user 
+Router.post("/add-booking", bookingsController.newBooking);    // To add a new booking
 
 module.exports = Router;
