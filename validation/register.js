@@ -6,8 +6,8 @@ module.exports = function validateRegistration(data) {
 
   data.name = !isEmpty(data.name) ? data.name : "";
   data.email = !isEmpty(data.email) ? data.email : "";
-  data.password = !isEmpty(data.password) ? data.password : "";
-  data.password2 = !isEmpty(data.password2) ? data.password2 : "";
+  data.pwd = !isEmpty(data.pwd) ? data.pwd : "";
+  data.confPwd = !isEmpty(data.confPwd) ? data.confPwd : "";
 
   if (!Validator.isLength(data.name, { min: 2, max: 40 })) {
     errors.name = "Name must be between 2 and 40 characters";
@@ -25,20 +25,20 @@ module.exports = function validateRegistration(data) {
     errors.email = "Email is invalid";
   }
 
-  if (Validator.isEmpty(data.password)) {
-    errors.password = "Password field is required";
+  if (Validator.isEmpty(data.pwd)) {
+    errors.pwd = "Password field is required";
   }
 
-  if (!Validator.isLength(data.password, { min: 6, max: 40 })) {
-    errors.password = "Password must be atleast 6 characters";
+  if (!Validator.isLength(data.pwd, { min: 6, max: 40 })) {
+    errors.pwd = "Password must be atleast 6 characters";
   }
 
-  if (Validator.isEmpty(data.password2)) {
-    errors.password2 = "Confirm Password field is required";
+  if (Validator.isEmpty(data.confPwd)) {
+    errors.confPwd = "Confirm Password field is required";
   }
 
-  if (!Validator.equals(data.password, data.password2)) {
-    errors.password2 = "Passwords must match";
+  if (!Validator.equals(data.pwd, data.confPwd)) {
+    errors.confPwd = "Passwords must match";
   }
 
   return {
